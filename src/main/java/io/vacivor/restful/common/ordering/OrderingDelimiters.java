@@ -20,7 +20,7 @@ public final class OrderingDelimiters {
     }
 
     public static OrderingDelimiters defaultDelimiters() {
-        return new OrderingDelimiters(",", ";");
+        return new OrderingDelimiters(";", ",");
     }
 
     public static OrderingDelimiters of(String itemDelimiter, String fieldDelimiterRegex) {

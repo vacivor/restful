@@ -63,11 +63,11 @@ X-Pagination: {"page":1,"pageSize":10,"total":120,"totalPage":12}
 **Ordering**
 Query param:
 ```
-orderBy=field;ASC,field2;DESC
+orderBy=field,ASC;field2,DESC
 ```
 Delimiters (default):
-1. Item delimiter: `,`
-2. Field delimiter regex: `;`
+1. Item delimiter: `;`
+2. Field delimiter regex: `,`
 
 Only allowed fields are accepted; others are ignored for safety.
 
