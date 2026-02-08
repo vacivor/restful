@@ -4,7 +4,6 @@ import com.flipkart.zjsonpatch.Jackson3JsonPatch;
 import io.vacivor.restful.assembler.UserModelAssembler;
 import io.vacivor.restful.common.exception.BadRequestException;
 import io.vacivor.restful.common.exception.NotFoundException;
-import io.vacivor.restful.common.ordering.OrderingDelimiters;
 import io.vacivor.restful.common.ordering.OrderingParameters;
 import io.vacivor.restful.common.ordering.SpringDataOrderingAdapter;
 import io.vacivor.restful.common.pagination.PaginationInfo;
@@ -46,7 +45,6 @@ public class UserController {
   private final UserRepository userRepository;
   private final ObjectMapper objectMapper;
   private final UserModelAssembler assembler;
-  private static final String ORDER_BY_DELIMITER = ",";
 
   public UserController(
       UserRepository userRepository,
@@ -74,7 +72,6 @@ public class UserController {
     OrderingParameters<Sort, Sort.Order> ordering = new OrderingParameters<>(
         orderBy, new SpringDataOrderingAdapter())
         .allow(allowedOrderFields())
-        .delimiters(OrderingDelimiters.of(ORDER_BY_DELIMITER, "\\s+"))
         .parse();
 
     Sort sort = ordering.getSort();
