@@ -1,7 +1,6 @@
 # Restful Template (Spring Boot + JPA + PostgreSQL)
 
 This project is a RESTful template built on Spring Boot 4, JPA, PostgreSQL, HATEOAS, JSON Patch, and RFC 9457 Problem Details.
-It uses Jackson 3 (`tools.jackson.*`) and supports field shaping, pagination, ordering, and method-aware links.
 
 **Features**
 1. RFC 9457 Problem Details for errors
