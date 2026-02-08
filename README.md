@@ -45,6 +45,8 @@ Base path: `/users`
 3. `POST /users`
 4. `PATCH /users/{id}` (`application/json-patch+json`)
 5. `DELETE /users/{id}`
+6. `POST /users/{id}:enable`
+7. `POST /users/{id}:disable`
 
 **Pagination**
 Query params:
@@ -61,9 +63,11 @@ X-Pagination: {"page":1,"pageSize":10,"total":120,"totalPage":12}
 **Ordering**
 Query param:
 ```
-orderBy=field ASC,field2 DESC
+orderBy=field;ASC,field2;DESC
 ```
-Delimiter is hard-coded in controller as `,`.
+Delimiters (default):
+1. Item delimiter: `,`
+2. Field delimiter regex: `;`
 
 Only allowed fields are accepted; others are ignored for safety.
 
@@ -81,9 +85,10 @@ Behavior:
 **HATEOAS Links**
 Each returned user includes `_links` with method-aware actions:
 1. `self` `GET`
-2. `update` `PUT` (URI provided, no controller method yet)
-3. `patch` `PATCH`
-4. `delete` `DELETE`
+2. `patch` `PATCH`
+3. `delete` `DELETE`
+4. `enable` `POST`
+5. `disable` `POST`
 
 **JSON Patch**
 Endpoint:
