@@ -3,7 +3,9 @@ package io.vacivor.restful.dto;
 import io.vacivor.restful.hateoas.Shapable;
 import java.time.OffsetDateTime;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
+@Relation(itemRelation = "user", collectionRelation = "users")
 public class UserResponse extends RepresentationModel<UserResponse> implements Shapable {
 
   private Long id;

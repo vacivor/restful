@@ -52,9 +52,14 @@ Query params:
 1. `page`
 2. `pageSize`
 
+List response body uses standard HAL pagination format:
+1. `_embedded`
+2. `_links`
+3. `page`
+
 Response header:
 ```http
-X-Pagination: {"page":1,"pageSize":10,"total":120,"totalPage":12}
+X-Pagination: {"size":10,"number":1,"totalElements":120,"totalPages":12}
 ```
 
 `Link` header includes `self`, `first`, `prev`, `next`, `last` with `method="GET"`.

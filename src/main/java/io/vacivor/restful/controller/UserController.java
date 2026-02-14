@@ -6,7 +6,6 @@ import io.vacivor.restful.common.exception.BadRequestException;
 import io.vacivor.restful.common.exception.NotFoundException;
 import io.vacivor.restful.common.ordering.OrderingParameters;
 import io.vacivor.restful.common.ordering.SpringDataOrderingAdapter;
-import io.vacivor.restful.common.pagination.PaginationInfo;
 import io.vacivor.restful.common.pagination.PaginationParameters;
 import io.vacivor.restful.domain.User;
 import io.vacivor.restful.domain.UserStatusEnum;
@@ -21,6 +20,8 @@ import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +57,7 @@ public class UserController {
   }
 
   @GetMapping
-  public ResponseEntity<List<UserResponse>> list(
+  public ResponseEntity<PagedModel<UserResponse>> list(
       @RequestParam(name = "page", required = false) Integer page,
       @RequestParam(name = "pageSize", required = false) Integer pageSize,
       @RequestParam(name = "orderBy", required = false) String orderBy,
@@ -92,8 +93,8 @@ public class UserController {
 
     long total = result.getTotalElements();
     long totalPage = total == 0 ? 0 : (total + size - 1) / size;
-    PaginationInfo pagination = new PaginationInfo(
-        pageIndex + 1, size, total, totalPage);
+    PagedModel.PageMetadata pagination = new PagedModel.PageMetadata(
+        size, pageIndex + 1L, total, totalPage);
 
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Pagination", toJson(pagination));
@@ -103,7 +104,20 @@ public class UserController {
       headers.add(HttpHeaders.LINK, linkHeader);
     }
 
-    return ResponseEntity.ok().headers(headers).body(items);
+    PagedModel<UserResponse> body = PagedModel.of(items, pagination);
+    body.add(Link.of(buildPageUrl(request, pageIndex + 1, size), "self"));
+    if (totalPage > 0) {
+      body.add(Link.of(buildPageUrl(request, 1, size), "first"));
+      body.add(Link.of(buildPageUrl(request, (int) totalPage, size), "last"));
+    }
+    if (pageIndex + 1 > 1) {
+      body.add(Link.of(buildPageUrl(request, pageIndex, size), "prev"));
+    }
+    if (pageIndex + 1 < totalPage) {
+      body.add(Link.of(buildPageUrl(request, pageIndex + 2, size), "next"));
+    }
+
+    return ResponseEntity.ok().headers(headers).body(body);
   }
 
   @GetMapping("/{id}")
@@ -218,7 +232,7 @@ public class UserController {
     return Set.of("username", "email");
   }
 
-  private String toJson(PaginationInfo pagination) {
+  private String toJson(PagedModel.PageMetadata pagination) {
     try {
       return objectMapper.writeValueAsString(pagination);
     } catch (JacksonException e) {
